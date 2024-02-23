@@ -1,23 +1,24 @@
 using CrazyFarm;
-using System.Collections;
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using System.Linq;
 
 namespace SheepFold
 {
-    public class Parent : MonoBehaviour
+    public class Parent : Family, IPointerClickHandler
     {
-		[SerializeField] private AnimalType type;
         [SerializeField] private int minBabies;
         [SerializeField] private int maxBabies;
 
 		private List<Baby> currentBabies;
-		private int targetBabies;
+		private int requiredBabies;
 
 		private void Start()
 		{
 			currentBabies = new List<Baby>();
-			targetBabies = Random.Range(minBabies, maxBabies);
+			requiredBabies = Random.Range(minBabies, maxBabies);
 		}
 
 		private void OnTriggerEnter2D(Collider2D collision)
@@ -41,7 +42,7 @@ namespace SheepFold
 				Debug.Log("It's the right baby");
 				currentBabies.Add(baby);
 
-				if (currentBabies.Count == targetBabies)
+				if (currentBabies.Count == requiredBabies)
 					Despawn();
 			}
 			else
@@ -63,5 +64,21 @@ namespace SheepFold
 
 			Destroy(this);
 		}
-	}
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+			//PARENT ANIMAL SOUND
+			transform.DOPunchScale(-Vector3.one * 0.2f, 1f)
+				.OnComplete(AllChildCry);
+        }
+
+		private void AllChildCry()
+		{
+			foreach (Baby lBaby in FindObjectsOfType<Baby>())
+			{
+				if (lBaby.type == type)
+					lBaby.Cry();
+			}
+        }
+    }
 }
