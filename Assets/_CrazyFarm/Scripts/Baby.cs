@@ -5,16 +5,16 @@ using UnityEngine.EventSystems;
 
 namespace CrazyFarm
 {
-    public class Baby : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+    public delegate void BabyEventHandler(Baby baby);
+    public class Baby : Family, IDragHandler, IBeginDragHandler, IEndDragHandler
     {
         [SerializeField, MinMaxSlider(0f, 2f)] private Vector2 minMaxStepDistance;
         [SerializeField, MinMaxSlider(0f, 2f)] private Vector2 minMaxDurationBtwSteps;
         [SerializeField] private float stepDuration = 0.5f;
-        [field: SerializeField] public AnimalType type { get; private set; } = default;
 
         private Vector2 startDragPosition;
 
-        public System.Action Dropped; 
+        public event BabyEventHandler OnDropped; 
 
         public float RandomStepDistance => Random.Range(minMaxStepDistance.x, minMaxStepDistance.y);
         public float RandomDurationBtwSteps => Random.Range(minMaxDurationBtwSteps.x, minMaxDurationBtwSteps.y);
@@ -50,7 +50,7 @@ namespace CrazyFarm
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            Dropped?.Invoke();
+            OnDropped?.Invoke(this);
         }
 
         public void CancelDrop()
@@ -64,7 +64,6 @@ namespace CrazyFarm
                 });
             }
         }
-        
 
         public void Cry()
         {

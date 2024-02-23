@@ -23,19 +23,19 @@ namespace SheepFold
 
 		private void OnTriggerEnter2D(Collider2D collision)
 		{
-			//s'abonne au OnRelease du bébé
-			/*if (collision.gameObject.TryGetComponent<Baby>(out Baby lBaby)
-				lBaby.*/
+			/*if (collision.gameObject.TryGetComponent<Baby>(out Baby lBaby))
+				lBaby.OnDropped += Dropped_CheckRightBaby;*/
+			if (collision.gameObject.TryGetComponent<Baby>(out Baby lBaby))
+				Dropped_CheckRightBaby(lBaby);
 		}
 
 		private void OnTriggerExit2D(Collider2D collision)
 		{
-			//se désabonne au OnRelease du bébé
-			/*if (collision.gameObject.TryGetComponent<Baby>(out Baby lBaby)
-				lBaby.*/
+			if (collision.gameObject.TryGetComponent<Baby>(out Baby lBaby))
+				lBaby.OnDropped -= Dropped_CheckRightBaby;
 		}
 
-		private void CheckRightBaby(Baby baby)
+		private void Dropped_CheckRightBaby(Baby baby)
 		{
 			if (baby.type == type)
 			{

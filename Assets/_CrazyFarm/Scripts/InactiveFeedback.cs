@@ -16,7 +16,8 @@ namespace SheepFold
             else
                 durationCounter += Time.deltaTime;
 
-            animObject.SetActive(durationCounter >= inactiveDurationForShow);
+            if (animObject != null)
+                animObject.SetActive(durationCounter >= inactiveDurationForShow);
         }
     }
 }
